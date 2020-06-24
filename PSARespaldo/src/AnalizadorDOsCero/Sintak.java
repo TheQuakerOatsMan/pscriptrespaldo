@@ -17,7 +17,7 @@ public class Sintak {
 	String PreviusSimb = "";
 	String [][] tabla1;
 	int linea = 0, cerra=0, cera=0;
-	boolean errP = false, inicio=false, bandecoma=false, banderafinal=false; 
+	boolean errP = false, inicio=false, bandecoma=false, banderafinal=false, falsa=false; 
 	boolean vuelta = false; //controla el recorrido 
 	
 	//Este metodo llena la fila y columna en los arrays creados para ahorrarnos bucles de búsqueda
@@ -35,6 +35,7 @@ public class Sintak {
 		vuelta=false;
 		banderafinal=false;
 		bandecoma=false;
+		falsa=false;
 		tablas t = new tablas();
 		//tabla1 = t.laperrona;
 		tabla1 = t.laperrona2;
@@ -82,21 +83,26 @@ public class Sintak {
 		return errP;
 	}//Aplicamos el manejo a nivel de frase, ya que es el último elemento
 	public boolean finales(String lexema, int line) {
-		linea=line;
-		System.out.println("en este momento hay ceras-----:"+cera);
-				lex.addValue("finale");
-				/*apila(terminales.indexOf(pila.peek()), elexe.indexOf(lex.getValor(lex.listLenght()-1)),lex.listLenght()-1);
-				*/MensajeDeError += "Error de Sintaxis: en la linea "+linea+"\n"
-						+ "Se esperaba la palabra reservada 'final' para terminar la produccion \n";
-				cera--;
-				errP=false;
-				Simbol="final";//Se le asiga el tipo que es
-				if (pila.peek().equalsIgnoreCase("modulos") ||pila.peek().equalsIgnoreCase("creas") || pila.peek().equalsIgnoreCase("modulop")) {
-					apila(terminales.indexOf(pila.peek()), elexe.indexOf(lex.getValor(lex.listLenght()-1)),lex.listLenght()-1);
-				MensajeDePila += pila+"\n";
-	}
-				else
-					sacar(lex.getValor(lex.listLenght()-1));
+		linea = line;
+		// la hace falta varios finales
+		falsa = false;// Entrara de manera uniforme
+		System.out.println("en este momento hay ceras-----:" + cera);
+		lex.addValue("finale");
+		Simbol = "final";// Se le asiga el tipo que es
+		if (pila.peek().equalsIgnoreCase("modulos") || pila.peek().equalsIgnoreCase("creas")
+				|| pila.peek().equalsIgnoreCase("modulop")) {
+			apila(terminales.indexOf(pila.peek()), elexe.indexOf(lex.getValor(lex.listLenght() - 1)),
+					lex.listLenght() - 1);
+		} else {
+			MensajeDePila += pila + "\n";
+			sacar(lex.getValor(lex.listLenght() - 1));
+		}
+
+		MensajeDeError += "Error de Sintaxis: en la linea " + linea + "\n"
+				+ "Se esperaba la palabra reservada 'final' para terminar la produccion \n";
+		cera--;
+		errP = false;
+		
 		return errP;
 	}
 	
@@ -144,7 +150,7 @@ public class Sintak {
 						if (bandecoma==true) {
 							sacar(lex.getValor(pos));
 							bandecoma=false;
-						}if (banderafinal==true) {
+						}if (banderafinal==true && falsa==false) {
 							if (cera==1 && lex.getValor(pos).equalsIgnoreCase("finale"))
 								cera--;
 							sacar(lex.getValor(pos));

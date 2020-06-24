@@ -197,6 +197,7 @@ public class IDELast implements KeyListener, MouseWheelListener, MouseListener {
 						if(conf!=null) {
 							JOptionPane.showMessageDialog(null, conf);
 							areaTrabajo.setText("");
+							nlineaTextArea();
 						}else {
 							JOptionPane.showMessageDialog(null, "Formato invalido");
 						}

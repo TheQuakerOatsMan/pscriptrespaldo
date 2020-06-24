@@ -345,7 +345,7 @@ public class IDELast implements KeyListener, MouseWheelListener, MouseListener {
 						consolaS = consolaS + "-----------------\n";
 						err = err + "Análisis Sintáctico finalizado correctamente\n";
 					} else {
-						while (sintax.verfinales() > 0) { //checa si hay finales
+						while (sintax.verfinales() > 0 && bandera!=true) { //checa si hay finales
 							if (!(sintax.finales(" ", lexer23.nlinea))) {
 								consolaS=consolaS + sintax.MensajeDePila;
 								try {
@@ -365,7 +365,7 @@ public class IDELast implements KeyListener, MouseWheelListener, MouseListener {
 									e1.printStackTrace();
 								}
 							}
-						}
+						}sintax.cera=0; //reiniciamos
 						//en este caso solo avisamos ya que la parte lexico sintactica se hacen juntas
 						if (bandera==true) {
 							consolaS = consolaS + "-----------------\n";

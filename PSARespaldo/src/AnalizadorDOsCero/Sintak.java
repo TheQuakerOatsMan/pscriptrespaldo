@@ -17,9 +17,10 @@ public class Sintak {
 	String PreviusSimb = "";
 	String[][] tabla1;
 	int linea = 0, cerra = 0, cera = 0;
-	boolean errP = false, inicio = false, bandecoma = false, banderafinal = false, falsa = false, banderaini=false;
+	boolean errP = false, inicio = false, bandecoma = false, banderafinal = false, falsa = false, banderaini=false, vuelta2=false;
 	boolean vuelta = false; // controla el recorrido
 	int entrada1,entrada2,entrada3, entrada4, entrada5 , entrada6, entrada7;
+	String frase;
 
 	// Este metodo llena la fila y columna en los arrays creados para ahorrarnos
 	// bucles de búsqueda
@@ -171,17 +172,26 @@ public class Sintak {
 							sacar(lex.getValor(pos));
 							bandecoma = false;
 						}
-						if (banderafinal == true && falsa == false && !pila.peek().contains("inicio")) {
+				
+						if (banderafinal == true && falsa == false && !frase.contains(pila.peek())) {
 							if (cera == 1 && lex.getValor(pos).equalsIgnoreCase("finale"))
 								cera--;
 							sacar(lex.getValor(pos));
 							banderafinal = false;
 						}
+						
 
+					}
+					if (vuelta2==true) {
+						MensajeDeError += "Error de Sintaxis: " + Simbol + " después de " + PreviusSimb + " en la línea "
+								+ linea + "\n" + "Se esperaba un " + pila.peek() + "\n Se acabo el tiempo de busqueda ahora lo sacara\n";
+						pila.pop();
+						vuelta2=false;
 					}if (lex.getValor(pos).equalsIgnoreCase("inicio"))
 							banderaini=true;
 					System.out.println("ceraaaaaaaaa::::::::::: "+cera);
 					errP = false;
+					//vuelta2=true;
 				} else {
 					System.out.println("ceraaaaaaaaa::::::::::: "+cera);
 					MensajeDeError += "Error de Sintaxis3: " + Simbol + " al inicio de la línea 1\n" + "Se esperaba un "
@@ -207,6 +217,7 @@ public class Sintak {
 		System.out.println("interseccion " + tabla1[i][j]);
 		System.out.println("posicion " + i + " , " + j);
 		System.out.println("pivote" + pivote);
+		frase=interseccion;
 		if (interseccion == " " || interseccion.equals("saltar")) {
 			if (pivote > 0) {
 				MensajeDeError += "Error de Sintaxis: " + Simbol + " después de " + PreviusSimb + " en la línea "

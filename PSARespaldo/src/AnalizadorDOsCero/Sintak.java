@@ -17,9 +17,8 @@ public class Sintak {
 	String PreviusSimb = "";
 	String[][] tabla1;
 	int linea = 0, cerra = 0, cera = 0;
-	boolean errP = false, inicio = false, bandecoma = false, banderafinal = false, falsa = false, banderaini=false, vuelta2=false;
+	boolean errP = false, inicio = false, bandecoma = false, banderafinal = false, falsa = false, banderaini = false;
 	boolean vuelta = false; // controla el recorrido
-	int entrada1,entrada2,entrada3, entrada4, entrada5 , entrada6, entrada7;
 	String frase;
 
 	// Este metodo llena la fila y columna en los arrays creados para ahorrarnos
@@ -40,7 +39,6 @@ public class Sintak {
 		bandecoma = false;
 		falsa = false;
 		tablas t = new tablas();
-		// tabla1 = t.laperrona;
 		tabla1 = t.laperrona2;
 		llenarFyC();
 		cera = 0;
@@ -53,9 +51,6 @@ public class Sintak {
 			pila.clear();
 			return true;
 		} else {
-			// MensajeDeError += "Error de Sintaxis3: "+lex.getValor(lex.listLenght()-1)+"
-			// después de "+ lex.getValor(lex.listLenght()-1)+" en la línea "+
-			// linea+"\n";errP = false;
 			return false;
 		}
 	}
@@ -71,7 +66,7 @@ public class Sintak {
 		if (vuelta) {
 			MensajeDePila = "";
 		} else {
-			MensajeDePila += pila;
+			MensajeDePila += pila + "\n";
 			vuelta = true;
 		}
 		lex.addValue(lexema);
@@ -87,19 +82,16 @@ public class Sintak {
 		}
 		PreviusSimb = simbol;
 		return errP;
-	}// Aplicamos el manejo a nivel de frase, ya que es el último elemento
+	}// Aplicamos el manejo de errores a nivel de frase, ya que es el último elemento
 
 	public boolean finales(String lexema, int line) {
 		linea = line;
 		// la hace falta varios finales
 		falsa = false;// Entrara de manera uniforme
-		System.out.println("en este momento hay ceras-----:" + cera);
 		lex.addValue("finale");
 		Simbol = "final";// Se le asiga el tipo que es
-		if (pila.peek().equalsIgnoreCase("modulos") || pila.peek().equalsIgnoreCase("creas")// En dado caso que la
-																							// sentencia sea la ultima
-																							// puede salir
-				|| pila.peek().equalsIgnoreCase("modulop")) {
+		if (pila.peek().equalsIgnoreCase("modulos") || pila.peek().equalsIgnoreCase("creas")
+				|| pila.peek().equalsIgnoreCase("modulop")) {// En dado caso que la sentencia sea la ultima puede salir
 			apila(terminales.indexOf(pila.peek()), elexe.indexOf(lex.getValor(lex.listLenght() - 1)),
 					lex.listLenght() - 1);
 		} else {
@@ -125,12 +117,8 @@ public class Sintak {
 			// pila.push(" ");
 		} else if (terminales.contiene(pila.peek()) && elexe.contiene(lex.getValor(pivote))) {
 			apila(terminales.indexOf(pila.peek()), elexe.indexOf(lex.getValor(pivote)), pivote);
-		} else if (elexe.contiene(lex.getValor(pivote)) || pila.contains(lex.getValor(pivote))) {// en este caso
-																									// determina si el
-																									// teminal se
-																									// ecuentra el la
-																									// produccion y no
-																									// pare
+		} else if (elexe.contiene(lex.getValor(pivote)) || pila.contains(lex.getValor(pivote))) {
+			// en este caso determina queterminal se encuentra el la produccion y no pare
 			proceso(pivote);
 		}
 	}
@@ -158,7 +146,6 @@ public class Sintak {
 					cera--;
 					inicio = false;
 					banderafinal = false;
-					System.out.println("ceraaaaaaaaa::::::::::: "+cera);
 				}
 			}
 		} else {
@@ -172,29 +159,20 @@ public class Sintak {
 							sacar(lex.getValor(pos));
 							bandecoma = false;
 						}
-				
+
 						if (banderafinal == true && falsa == false && !frase.contains(pila.peek())) {
 							if (cera == 1 && lex.getValor(pos).equalsIgnoreCase("finale"))
 								cera--;
 							sacar(lex.getValor(pos));
 							banderafinal = false;
 						}
-						
 
 					}
-					if (vuelta2==true) {
-						MensajeDeError += "Error de Sintaxis: " + Simbol + " después de " + PreviusSimb + " en la línea "
-								+ linea + "\n" + "Se esperaba un " + pila.peek() + "\n Se acabo el tiempo de busqueda ahora lo sacara\n";
-						pila.pop();
-						vuelta2=false;
-					}if (lex.getValor(pos).equalsIgnoreCase("inicio"))
-							banderaini=true;
-					System.out.println("ceraaaaaaaaa::::::::::: "+cera);
+					if (lex.getValor(pos).equalsIgnoreCase("inicio"))
+						banderaini = true;
 					errP = false;
-					//vuelta2=true;
 				} else {
-					System.out.println("ceraaaaaaaaa::::::::::: "+cera);
-					MensajeDeError += "Error de Sintaxis3: " + Simbol + " al inicio de la línea 1\n" + "Se esperaba un "
+					MensajeDeError += "Error de Sintaxis: " + Simbol + " al inicio de la línea 1\n" + "Se esperaba un "
 							+ pila.peek() + "\n";
 					if (lex.getValor(pos).equalsIgnoreCase("puntcoma")
 							|| lex.getValor(pos).equalsIgnoreCase("finale")) {
@@ -215,16 +193,14 @@ public class Sintak {
 	public void apila(int i, int j, int pivote) {
 		String interseccion = tabla1[i][j];
 		System.out.println("interseccion " + tabla1[i][j]);
-		System.out.println("posicion " + i + " , " + j);
-		System.out.println("pivote" + pivote);
-		frase=interseccion;
+		frase = interseccion;
 		if (interseccion == " " || interseccion.equals("saltar")) {
 			if (pivote > 0) {
 				MensajeDeError += "Error de Sintaxis: " + Simbol + " después de " + PreviusSimb + " en la línea "
 						+ linea + "\n" + "Tipo de dato incorrecto\n";
 				errP = false;
 			} else {
-				MensajeDeError += "Error de Sintaxis3: " + Simbol + " al inicio de la línea 1\n"
+				MensajeDeError += "Error de Sintaxis: " + Simbol + " al inicio de la línea 1\n"
 						+ "Tipo de dato incorrecto\n";
 				errP = false;
 			}
@@ -234,11 +210,7 @@ public class Sintak {
 			String[] interseccionArray = interseccion.split(" ");
 			if (interseccion.contains("puntcoma")) {// la interseccion tiene un punto y coma que puede seguir
 				bandecoma = true;
-			}else if (interseccion.contains("endprin") || interseccion.contains("endproc") || interseccion.contains("endf")|| 
-				interseccion.contains("endcam") || interseccion.contains("endif") || interseccion.contains("endw") || interseccion.contains("endpara")) {
-				metcond(lex.getValor(pivote));
 			}
-
 			String tempo = pila.peek();
 			if (!((lex.getValor(pivote).equals("ciP")) && cerra == 0)
 					|| !((lex.getValor(pivote).equals("finale")) && cerra < 0)) {// el contador de parentesis
@@ -258,29 +230,21 @@ public class Sintak {
 				}
 				if (pila.peek().equalsIgnoreCase(lex.getValor(pivote))) { // encontro el terminal que busca
 					MensajeDePila += pila + "\n";
-					System.out.println("mesaje de pilona " + pila + "\n");
-
 					if (lex.getValor(pivote).equalsIgnoreCase("puntcoma"))
 						bandecoma = false;// termino correctamente
 					if (lex.getValor(pivote).equalsIgnoreCase("clase")) {
 						cera++;
 						inicio = true;
-						System.out.println("ceraaaaaaaaa::::::::::: "+cera);
 					} else if (lex.getValor(pivote).equalsIgnoreCase("finale") && inicio == true) {// por si nunca paso
 						cera--;
 						banderafinal = false;
 						inicio = false;
-						System.out.println("ceraaaaaaaaa::::::::::: "+cera);
 
 					}
 					pila.pop();
-					System.out.println("mesaje de pilona " + pila + "\n");
-
 					MensajeDePila += pila + "\n";
 					errP = true;
 				} else { // hara un produce
-					System.out.println("ceraaaaaaaaa::::::::::: "+cera);
-					System.out.println("mesaje de pilona " + pila + "\n");
 					MensajeDePila += pila + "\n";
 					procesoApilAndDesapil(pivote);
 				}
@@ -293,60 +257,5 @@ public class Sintak {
 				errP = false;
 			}
 		}
-	}
-
-	public void metcond(String cad) {// validamos si la palabra crea o metodos o funciones
-		switch (cad) {
-		case "endprin":
-			entrada1++;
-			break;
-		case "endf":
-			entrada2++;
-			break;
-		case "endroc":
-			entrada3++;
-			break;
-		case "endif":
-			entrada4++;
-			break;
-		case "endcam":
-			entrada5++;
-			break;
-		case "endpara":
-			entrada6++;
-			break;
-		case "endw":
-			entrada7++;
-			break;
-		default: break;
-		}
-	
-	}
-	public void metcondI(String cad) {// validamos si la palabra crea o metodos o funciones
-		switch (cad) {
-		case "endprin":
-			entrada1--;
-			break;
-		case "endf":
-			entrada2--;
-			break;
-		case "endroc":
-			entrada3--;
-			break;
-		case "endif":
-			entrada4--;
-			break;
-		case "endcam":
-			entrada5--;
-			break;
-		case "endpara":
-			entrada6--;
-			break;
-		case "endw":
-			entrada7--;
-			break;
-		default: break;
-		}
-	
 	}
 }

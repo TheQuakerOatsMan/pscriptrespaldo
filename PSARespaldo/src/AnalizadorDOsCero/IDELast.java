@@ -247,9 +247,7 @@ public class IDELast implements KeyListener, MouseWheelListener, MouseListener {
 				if (!(ct.getText().length() < 1)) {
 
 					tokens.clear();
-					//Lexer lexer = new Lexer();
 					Alexico lexer23= new Alexico(ct.getText());
-					//lexer.LexerL(ct.getText(), areaTrabajo);
 					String error = "";
 					boolean bandera=false;
 					String lineaE="";
@@ -274,7 +272,6 @@ public class IDELast implements KeyListener, MouseWheelListener, MouseListener {
 							tokens.addValue(lexer23.currentToken() + ""); // Solo para comprobar
 							if (tokens.getValor(tokens.listLenght() - 1).equalsIgnoreCase("error")) {
 								try {
-									System.out.println("linea de error"+(lexer23.nlinea-1));
 									pos = areaTrabajo.getLineStartOffset(lexer23.nlinea-1);
 									fin = areaTrabajo.getLineEndOffset(lexer23.nlinea-1);
 								} catch (BadLocationException e1) {
@@ -349,7 +346,6 @@ public class IDELast implements KeyListener, MouseWheelListener, MouseListener {
 							if (!(sintax.finales(" ", lexer23.nlinea))) {
 								consolaS=consolaS + sintax.MensajeDePila;
 								try {
-									System.out.println("pos "+lexer23.nlinea);
 									pos2 = areaTrabajo.getLineStartOffset(lexer23.nlinea-1);
 									fin2 = areaTrabajo.getLineEndOffset(lexer23.nlinea-1);
 

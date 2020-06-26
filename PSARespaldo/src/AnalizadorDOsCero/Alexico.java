@@ -66,11 +66,6 @@ public class Alexico {
     	fin=0;
     }
     public boolean procesalex() {
-    	/*if (fin<cadena.length()) {
-    		linea++;
-    		inicio=0;
-        	fin=0;
-    	}*/
     	nlinea=0;
     	blanco=false;
         if (linea < archivo.listLenght()) { //Imprime en pantalla el archivo completo
@@ -80,7 +75,7 @@ public class Alexico {
             }
             cadena = archivo.getValor(linea);
             System.out.println("Tamaño de la cadena es: " + cadena.length());
-            System.out.println("linea: "+linea);
+            System.out.println("Analisis en la linea: "+linea);
             do {
                 switch (caso) {
                     case 0: //Engloba el analisis de un numero, sin errores aÃºn
@@ -160,15 +155,9 @@ public class Alexico {
                         }
                         
                         else {
-                        	tokenP="error";//indica el token
-                            System.out.println("error generado en linea "+(linea+1));
                             fin++;
-                            for (int i = inicio; i < fin; i++) {
-                                tAsign = "" + tAsign + cadena.charAt(i);
-                            }
-                            nlinea=linea+1;
+                            genError(0);//Genera error
                             blanco=false;
-                            inicio=fin;   
                             return true;
                         }
 
@@ -236,14 +225,8 @@ public class Alexico {
                         }
                             
                         }else{ //No cumple con los requerimientos y no debe ser catalagoda con un token.
-                            cumple=true;
-                            for (int i = inicio; i < fin; i++) {
-                            tAsign = "" + tAsign + cadena.charAt(i);
-                        }
-                            inicio=fin;
-                            genToken.generaError(tAsign + ", error lexico linea "+ (linea+1));
-                            tokenP="error";//indica el token
-                            nlinea=linea+1;
+                            cumple=true;  
+                           genError(0);
                             blanco=false;//pueda entrar al sintactico
                             if (fin < cadena.length()) { //Si la cadena ya llegÃ³ a su fin, no volver a entrar
                             //tAsign = "";
@@ -290,11 +273,11 @@ public class Alexico {
                         break;
 
                     case 4: //Asigna el token a la clasificacion de los flotantes.
-                        if(cumple==true){
-                            token = "" + genToken.buscaTokenClasif("id_dec");
-                        for (int i = inicio; i < fin; i++) {
+                    	for (int i = inicio; i < fin; i++) {
                             tAsign = "" + tAsign + cadena.charAt(i);
                         }
+                        if(cumple==true){
+                            token = "" + genToken.buscaTokenClasif("id_dec");
                         genToken.guardaToken(tAsign + " , id_dec , "+ token);
                         tokenP=genToken.buscaTokenPalabra(3, token.toString());
                         inicio = fin;
@@ -309,13 +292,7 @@ public class Alexico {
                         }
                         
                         }else{ //No cumple con los requerimientos del token
-                            for (int i = inicio; i < fin; i++) {
-                            tAsign = "" + tAsign + cadena.charAt(i);
-                        }
-                            nlinea=linea+1;
-                            inicio=fin;
-                            genToken.generaError(tAsign + ", error lexico linea "+ (linea+1));
-                            tokenP="error";//indica el token
+                            genError(1);
                             blanco=false;//pueda entrar al sintactico
                             if (fin < cadena.length()) { //Si la cadena ya llegÃ³ a su fin, no volver a entrar
                             //tAsign = "";
@@ -341,17 +318,13 @@ public class Alexico {
                     				 caso=27;
                     				 fin++;
                     				 break;
-                    				/*tAsign = "" + tAsign + cadena.charAt(fin);
-                                     genToken.generaError(tAsign + ", error lexico linea "+ (linea+1));
-                                     tokenP="error";//indica el token
-                                     bande=0;*/
                     			}
                     			fin++;
                                 inicio = fin;
                                 nlinea=linea+1;
                                 banderadoble=false;
                                 blanco=false;//pueda entrar al sintactico
-                                if (fin < cadena.length()) { //Si la cadena ya llegÃ³ a su fin, no volver a entrar
+                                if (fin < cadena.length()) { //Si la cadena ya llega a su fin, no volver a entrar
                                     caso = 0;
                                     return true;
                                 } else {
@@ -383,7 +356,6 @@ public class Alexico {
                     	
                     
                     case 6://caso del identificador
-//                        System.out.println(cadena.charAt(fin));
                         if (fin < cadena.length()) { //Si es menor al tamaño de la cadena entonces compara
                             if (cadena.charAt(fin) == '_') { //Compara con un guion bajo
                                 fin++;
@@ -411,6 +383,9 @@ public class Alexico {
                         if (cadena.charAt(fin-1) == '_'){ //Si al final encuentra un guion bajo entonces no cumple
                         cumple=false;
                         }
+                        for (int i = inicio; i < fin; i++) {
+                            tAsign = "" + tAsign + cadena.charAt(i);
+                        }
                             
                         if(cumple==true){ //Si cumple los requisitos de ser un Identificador.
                         	token="";
@@ -424,22 +399,12 @@ public class Alexico {
                           	token = "" + genToken.buscaTokenClasif("id_func");
                           	tokenP=genToken.buscaTokenPalabra(3, token.toString());
                           }
-
-                        for (int i = inicio; i < fin; i++) {
-                            tAsign = "" + tAsign + cadena.charAt(i);
-                        }
                         genToken.guardaToken(tAsign +" , "+genToken.buscaTokenPalabra(3, token.toString())+" , " + token);
                         bande=0;//reinicia la bandera
                         inicio = fin; 
                         nlinea=linea+1;
                         }else{ //Si no cumple con los requisitos entonces genera un error
-                           for (int i = inicio; i < fin; i++) {
-                            tAsign = "" + tAsign + cadena.charAt(i);
-                        }   
-                         inicio=fin;
-                         nlinea=linea+1;
-                         genToken.generaError(tAsign + ", error lexico linea "+ (linea+1));
-                         tokenP="error";//indica el token
+                           genError(1);//Genera el error
                          bande=0;
                          
                         }blanco=false;//pueda entrar al sintactico
@@ -557,14 +522,7 @@ public class Alexico {
                             inicio = fin;
                             nlinea=linea+1;
                             }else{ //Si no cumple con los requisitos entonces genera un error
-                               for (int i = inicio; i < fin; i++) {
-                                tAsign = "" + tAsign + cadena.charAt(i);
-                            }   
-                             inicio=fin;
-                             nlinea=linea+1;
-                             System.out.println("Error:"+tAsign + ", error lexico linea "+ (linea+1));
-                             genToken.generaError(tAsign + ", error lexico linea "+ (linea+1));
-                             tokenP="error";//indica el token
+                               genError(0);
                             }blanco=false;//pueda entrar al sintactico
                             if (fin < cadena.length()) { //Si la cadena llego a su fin y no vuelve a entrar
                                 cumple=true;
@@ -660,13 +618,7 @@ public class Alexico {
                                 }
                     		}else {//se encuentra como que no llego a algo
                     			fin++;
-                    			for (int i = inicio; i < fin; i++) {
-                                    tAsign = "" + tAsign + cadena.charAt(i);
-                                } 
-                    			genToken.generaError(tAsign + ", error lexico linea "+ (linea+1));
-                    			tokenP="error";//indica el token
-                                       inicio = fin;
-                                       nlinea=linea+1;
+                    			genError(0);
                                        blanco=false;//pueda entrar al sintactico
                                  if (fin < cadena.length()) { //Si la cadena llego a su fin y no vuelve a entrar
                                      cumple=true;
@@ -1050,7 +1002,6 @@ public class Alexico {
                     			token = "" + genToken.buscaTokenCar("" + cadena.charAt(fin-1)+cadena.charAt(fin));//numero de token
                     			for (int i = fin-1; i <= fin; i++) {
                                     tAsign = "" + tAsign + cadena.charAt(i);
-                                    System.out.println("doble: "+cadena.charAt(i));
                                 }
                     			genToken.guardaToken(tAsign + " , "+genToken.buscaTokenPalabra(2, ""+cadena.charAt(fin-1)+cadena.charAt(fin))+" , " + token);
                                 tokenP=genToken.buscaTokenPalabra(2, ""+cadena.charAt(fin-1)+cadena.charAt(fin));
@@ -1238,10 +1189,9 @@ public class Alexico {
             	procesalex();
             }else {
             	 caso = 0;
-            	System.out.println("");
-                System.out.println("Analisis de la linea: "+(linea+1));
                 System.out.println("Errores generados. ");
                 genToken.imprimeError();
+                System.out.println("-------------------");
                 reinicia();
                 continuar = true;
                 bande=0;
@@ -1252,6 +1202,18 @@ public class Alexico {
         }
     }
     private final Pattern pattern;
+    //produce un token de error
+    public void genError(int num) {
+    	if (num==0) {
+    		for (int i = inicio; i < fin; i++) {
+                tAsign = "" + tAsign + cadena.charAt(i);
+            }
+    	}
+            nlinea=linea+1;
+            inicio=fin;
+            genToken.generaError(tAsign + ", error lexico linea "+ (linea+1));
+            tokenP="error";//indica el token
+    }
     private char c[]= {'<','>',' ','|','@','=','/','*','+','-','.','{','}',',','¡','!','?','¿','#','(',')','[',']','_',':'};
     public boolean isCad(char cad) {
     	boolean esCad=false;

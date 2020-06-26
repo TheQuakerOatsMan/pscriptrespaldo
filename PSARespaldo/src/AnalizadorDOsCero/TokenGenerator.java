@@ -1,21 +1,6 @@
 package AnalizadorDOsCero;
 
-public class TokenGenerator {
-    /*Ascii de simbolos: ; es 59
-     = es 61
-     + es 43
-     - es 45
-     * es 42
-     ( es 40
-     ) es 41
-    program es 258
-    begin es 259
-    end es 260
-    identificador es 290
-    entero es 291
-    flotante es 292
-    */
-    
+public class TokenGenerator {    
   private String[][] tablaToken={ 
                                  {"identificador","1"},
                                  {"id_ent","2"},

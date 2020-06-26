@@ -167,7 +167,7 @@ public class Alexico {
                             caso = 3;
                             break;
                         }
-                        if(fin<cadena.length() && (isMayus(cadena.charAt(fin)) || isMinus(cadena.charAt(fin)) || cadena.charAt(fin)=='"'
+                        if(fin<cadena.length() && (isEsp(cadena.charAt(fin)) || isMayus(cadena.charAt(fin)) || isMinus(cadena.charAt(fin)) || cadena.charAt(fin)=='"'
                         	   || cadena.charAt(fin)=='$' || cadena.charAt(fin)=='¡' ||
                         		cadena.charAt(fin)=='¿' || cadena.charAt(fin)=='{' || cadena.charAt(fin)=='}' || cadena.charAt(fin)=='@' || cadena.charAt(fin)=='#')){
                             if (!(cadena.charAt(fin)==' ')) {//como en cadena se registra el espacio en blanco
@@ -488,7 +488,7 @@ public class Alexico {
                                 if (isCad(cadena.charAt(fin)) || cadena.charAt(fin)=='\'') {
                                 fin++;
                                 break;}
-                                if (isNum(cadena.charAt(fin))) {
+                                if (isNum(cadena.charAt(fin)) || isEsp(cadena.charAt(fin))) {
                                 fin++;
                                 break;
                                 }
@@ -534,46 +534,15 @@ public class Alexico {
                             }
                             
                             break;
-                    case 13: // Asigna un valor de caracter
-            
-                        token = "" + genToken.buscaTokenCar(""+cadena.charAt(fin-1)+cadena.charAt(fin));
-                        tAsign = "" + cadena.charAt(fin-1) + cadena.charAt(fin);
-                        tokenP=genToken.buscaTokenPalabra(2, ""+cadena.charAt(fin-1)+cadena.charAt(fin));
-                        genToken.guardaToken(tAsign + " , "+tokenP+" , " + token);
-                        fin++;
-                        inicio = fin;
-                        nlinea=linea+1;
-                        blanco=false;//pueda entrar al sintactico
-                        if (fin < cadena.length()) { //Si la cadena ya llego a su fin
-                            //tAsign = "";
-                            caso = 0;
-                            return true;
-                        } else {
-                            continuar = false;
-                        }
 
-                        ;
-                        break;
                     case 14: //caso id_caracter
                     	if(fin<cadena.length()){
-                            if(isMinus(cadena.charAt(fin))){ //Completa el ciclo de la cadena de minusculas
-                            fin++;
-                            caso=15;
-                            break;
-                            }if (isMayus(cadena.charAt(fin))) {
-                            caso=15;
-                            fin++;
-                            break;}
-                            if (isCad(cadena.charAt(fin))) {
-                            fin++;
+                            if (isMinus(cadena.charAt(fin)) || isMayus(cadena.charAt(fin)) || isEsp(cadena.charAt(fin)) || isCad(cadena.charAt(fin)) || isNum(cadena.charAt(fin))) {
+                            if (!(cadena.charAt(fin)=='\''))
+                            	fin++;
                             caso=15;
                             break;}
-                            if (isNum(cadena.charAt(fin))) {
-                            fin++;
-                            caso=15;
-                            break;
-                            }
-                            if (cadena.charAt(fin)=='"' || cadena.charAt(fin)==';'){
+                            if (cadena.charAt(fin)==';'){
                             	fin++;
                                 caso=15;
                                 break;	
@@ -644,7 +613,7 @@ public class Alexico {
                                 bande=2;
                                 break;
                             }
-                    		if (cadena.charAt(fin)==':' || isMayus(cadena.charAt(fin)) || isNum(cadena.charAt(fin)) || isCaracter(cadena.charAt(fin)) ||isMinus(cadena.charAt(fin))) {
+                    		if (isEsp(cadena.charAt(fin)) || cadena.charAt(fin)==':' || isMayus(cadena.charAt(fin)) || isNum(cadena.charAt(fin)) || isCaracter(cadena.charAt(fin)) ||isMinus(cadena.charAt(fin))) {
                            	 cumple=false;
                            	 fin++;
                            	 break;
@@ -666,7 +635,7 @@ public class Alexico {
                                 fin++;
                                 bande=3;
                                 break;}
-                             if (cadena.charAt(fin)==':' || isMayus(cadena.charAt(fin))||isNum(cadena.charAt(fin)) || isCaracter(cadena.charAt(fin)) ||isMinus(cadena.charAt(fin))) {
+                             if (isEsp(cadena.charAt(fin)) || cadena.charAt(fin)==':' || isMayus(cadena.charAt(fin))||isNum(cadena.charAt(fin)) || isCaracter(cadena.charAt(fin)) ||isMinus(cadena.charAt(fin))) {
                             	 cumple=false;
                             	 fin++;
                             	 break;
@@ -684,7 +653,7 @@ public class Alexico {
                     	if (fin<cadena.length()) {
                     		if (isNum(cadena.charAt(fin))|| isMayus(cadena.charAt(fin))|| 
                     				isMinus(cadena.charAt(fin)) || isCaracter(cadena.charAt(fin))
-                    				|| isCad(cadena.charAt(fin))) {//casos posibles
+                    				|| isCad(cadena.charAt(fin)) || isEsp(cadena.charAt(fin))) {//casos posibles
                     			fin++;
                     			caso=19;
                     			break;
@@ -707,7 +676,7 @@ public class Alexico {
                     	break;
                     case 19: 
                     	if (fin<cadena.length()) {
-                    		if (isNum(cadena.charAt(fin))|| isMayus(cadena.charAt(fin))|| 
+                    		if (isNum(cadena.charAt(fin))|| isMayus(cadena.charAt(fin))|| isEsp(cadena.charAt(fin))||
                     				isMinus(cadena.charAt(fin)) || isCaracter(cadena.charAt(fin))
                     				|| isCad(cadena.charAt(fin)) || cadena.charAt(fin)=='@'
                     				|| cadena.charAt(fin)=='_' || cadena.charAt(fin)=='/' ||
@@ -735,7 +704,7 @@ public class Alexico {
                     				fin++;
                     				break;
                     	}
-                    		if (isNum(cadena.charAt(fin))|| isMayus(cadena.charAt(fin))|| 
+                    		if (isEsp(cadena.charAt(fin))|| isNum(cadena.charAt(fin))|| isMayus(cadena.charAt(fin))|| 
                     				isMinus(cadena.charAt(fin)) || isCaracter(cadena.charAt(fin))
                     				|| isCad(cadena.charAt(fin)) || cadena.charAt(fin)=='@'
                     				|| cadena.charAt(fin)=='_' ||
@@ -775,7 +744,7 @@ public class Alexico {
                 				fin++;
                 				break;
                 			}
-                    		if (isNum(cadena.charAt(fin))|| isMayus(cadena.charAt(fin))|| 
+                    		if (isEsp(cadena.charAt(fin))|| isNum(cadena.charAt(fin))|| isMayus(cadena.charAt(fin))|| 
                     				isMinus(cadena.charAt(fin)) || isCaracter(cadena.charAt(fin))
                     				|| isCad(cadena.charAt(fin)) || cadena.charAt(fin)=='@'
                     				|| cadena.charAt(fin)=='_' ||
@@ -890,9 +859,6 @@ public class Alexico {
                         					caso=2;
                         					entraveces=0;
                     					}else {
-                    						/*inicio=fin;
-                        					fin++;*/
-                    						//encuentra el fin-1
                     						inicio=fin-1;
                         					cumple=true;
                         					primero=false;
